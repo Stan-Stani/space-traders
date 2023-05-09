@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import {
+  tokens,
   makeStyles,
   Card,
   Divider,
@@ -13,13 +14,28 @@ import {
   Text,
 } from "@fluentui/react-components"
 
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: tokens.colorNeutralBackground1,
+  },
+  commandPanel: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 0,
+    justifyContent: "flex-start",
+  }
+})
+
 const CreateAgent = (props: InputProps) => {
-    const inputId = useId("input")
-    const [inputText, setInputText] = useState<string>("")
+  const classes = useStyles()
+  const inputId = useId("input")
+  const [inputText, setInputText] = useState<string>("")
   const [data, setData] = useState<any>(null)
 
   const handleClick = () => {
-    const reqData = {symbol: inputText, faction: "COSMIC"}
+    const reqData = { symbol: inputText, faction: "COSMIC" }
     axios
       .post("https://api.spacetraders.io/v2/register", reqData)
       .then((response) => {
@@ -27,18 +43,19 @@ const CreateAgent = (props: InputProps) => {
         setData(response.data)
       })
       .catch((error) => {
-          console.log(error)
-          setData(error.response.data)
+        console.log(error)
+        setData(error.response.data)
       })
   }
 
   return (
     <>
-      <Card>
+      <Card className={classes.root}>
+        <div className={classes.commandPanel}>
         <Label htmlFor={inputId}>Agent Name:</Label>
         <Input id={inputId} onChange={(e) => setInputText(e.target.value)} />
-        <Button onClick={handleClick}>Create Agent</Button>
-        <Divider />
+          <Button onClick={handleClick}>Create Agent</Button>
+          </div>
         <Text>{JSON.stringify(data)}</Text>
       </Card>
     </>

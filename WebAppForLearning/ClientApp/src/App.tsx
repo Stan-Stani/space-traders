@@ -44,7 +44,6 @@ const useStyles = makeStyles({
       marginLeft: tokens.spacingHorizontalS,
     },
   },
-
   mainContent: {
     ...shorthands.margin(tokens.spacingVerticalS, tokens.spacingHorizontalS),
   },
@@ -67,17 +66,9 @@ const Root = () => {
   return (
     <div className={classes.root}>
       <div className={classes.navBar}>
-        <Button onClick={() => navigate("/")}>
-          Home
-        </Button>
-        <Button
-          onClick={() => navigate("/weather")}
-        >
-          Weather
-        </Button>
-        <Button className="navButton">
-          SpaceTraders
-        </Button>
+        <Button onClick={() => navigate("/")}>Home</Button>
+        <Button onClick={() => navigate("/weather")}>Weather</Button>
+        <Button onClick={() => navigate("/space-traders")}>SpaceTraders</Button>
       </div>
       <main className={classes.mainContent}>
         <Outlet />
