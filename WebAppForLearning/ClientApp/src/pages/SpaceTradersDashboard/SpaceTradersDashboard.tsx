@@ -15,7 +15,7 @@ import {
 } from "@fluentui/react-components"
 
 interface resDataState {
-  createAgentResData: {},
+  createAgentResData?: {},
   viewAgentResData?: {},
 }
 
@@ -82,16 +82,17 @@ const ViewAgent = (props: InputProps) => {
       .post("https://api.spacetraders.io/v2/register", reqData)
       .then((response) => {
         console.log(response.data)
-        setData(response.data)
+        setResDataState((prevState) => { return {...prevState, createAgentResData: response.data}})
       })
       .catch((error) => {
         console.log(error)
-        setData(error.response.data)
+        // setData(error.response.data)
       })
   }
 
   return (
     <>
+    
       <Card className={classes.root}>
         <div className={classes.commandPanel}>
         <Label htmlFor={inputId}>Agent Name:</Label>
@@ -104,10 +105,22 @@ const ViewAgent = (props: InputProps) => {
   )
 }
 
+const 
+
 const SpaceTradersDashboard = () => {
+  const classes = useStyles()
+  const inputId = useId("input")
+  const [inputText, setInputText] = useState<string>("")
   return (
     <>
-      <CreateAgent />
+      <Card className={classes.root}>
+        <div className={classes.commandPanel}>
+        <Label htmlFor={inputId}>Agent Name:</Label>
+        <Input id={inputId} onChange={(e) => setInputText(e.target.value)} />
+          <Button onClick={handleClick}>Create Agent</Button>
+          </div>
+        <Text>{JSON.stringify(data)}</Text>
+      </Card>
     </>
   )
 }
