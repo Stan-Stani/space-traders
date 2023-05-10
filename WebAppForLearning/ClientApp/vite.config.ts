@@ -8,10 +8,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 1337,
-    https: {
-      key: fs.readFileSync("../../vitessl/key.pem"),
-      cert: fs.readFileSync("../../vitessl/cert.pem"),
-    },
+    // https: {
+    //   key: fs.readFileSync("../../vitessl/key.pem"),
+    //   cert: fs.readFileSync("../../vitessl/cert.pem"),
+    // },
     proxy: {
       "/WeatherForecast": {
         target: "https://localhost:7086",
