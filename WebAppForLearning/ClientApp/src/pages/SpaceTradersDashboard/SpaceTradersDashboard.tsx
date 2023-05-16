@@ -63,6 +63,7 @@ const SpaceTradersDashboard = () => {
   }
 
   const sendApiRequest = (
+    action: string,
     urlBranch: string,
     reqMethod: string = "POST",
     reqData?: {}
@@ -93,6 +94,9 @@ const SpaceTradersDashboard = () => {
       axios.get(reqUrl, { headers: { Authorization: `Bearer ${API_USER_TOKEN}` } })
         .then((res) => handleAxiosResponse(res, "viewAgentResData"))
         .catch(handleAxiosError)
+    } else if (action === "accept_contract" && reqMethod === "POST") {
+      axios.post(reqUrl, reqData)
+        .then((res) => handleAxiosResponse(res, "acceptContractResData"))
     }
   }
 
@@ -101,15 +105,15 @@ const SpaceTradersDashboard = () => {
     
     switch (e.target.id) {
       case createAgentButtonId:
-        sendApiRequest("register", "POST", { symbol: inputText, faction: "COSMIC" })
+        sendApiRequest("register", "register", "POST", { symbol: inputText, faction: "COSMIC" })
         break
       
       case viewAgentButtonId:
-        sendApiRequest("my/agent", "GET")
+        sendApiRequest("get_agent", "my/agent", "GET")
         break
 
       case acceptContractButtonId:
-        sendApiRequest(`/my/contracts/${inputText}/accept`, "POST", { headers: { Authorization: `Bearer ${API_USER_TOKEN}` }})
+        sendApiRequest("accept_contract", `/my/contracts/${inputText}/accept`, "POST", { headers: { Authorization: `Bearer ${API_USER_TOKEN}` }})
         break
     }
     
