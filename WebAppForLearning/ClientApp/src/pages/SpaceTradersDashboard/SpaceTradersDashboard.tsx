@@ -21,7 +21,7 @@ interface resDataState {
   resError?: object;
 }
 
-const API_USER_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoiQ1JPQURUT0FEIiwiaWF0IjoxNjgzNjYzNzIyLCJzdWIiOiJhZ2VudC10b2tlbiJ9.gltNq7auewpKPwN0ceoZPNNhjEjGuoMIAk9wzn8_o3UBAo9d-vP0KUn-5xznMmmQB3gb-9n0BxU9ux3HwQfwqIHbdU7nyCiDfTrOnpA38wNSa-CyMC6gL8S-rv7Cfp-MefzMjHjmcP4blY6pvcpP-iOLExeoBv1wPl5V6Xbd9L7aMLrPSdzlW0oNn0GMGAl7LUf4Ov9s_QOSVF_AP91fTBplquNuDOuHNSNSU0y2qgEisBbotAF1yWxEZsmYi31dWLMj34iileKU6iZGRw-I6NWL46YcF5lpMZHbBz2pNyd5GtJ33e27657owjd6uzMBIgEUKWQsddllpUXWSfxyrOeXrIgseJwPPXWdkH1s0U2Wkck_MQz3JrQZFkliOu-aQxf6TpnIS-KlI3DXsggj5oHVW44sVuXkhHGWbSwGFRw7QHUAH4SbPLtOoJt-sj1Q1FYLIZsCD3JEF4_FhDmez8QMc1RqEqORJ0kcvc2poz4bfmofJqadIAdlyc116QZ-"
+const API_USER_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoiTlVSQkxORFNQVCIsImlhdCI6MTY4NDE5Nzk3MCwic3ViIjoiYWdlbnQtdG9rZW4ifQ.arsCwf12oaM0jnLlompXeXbxOm98W-aIs1B5OrANMt0WsxhdgzT40nHBkJmUQF257RgA0y1BY7rgHHMhr7olvpwOu-6nmmBVYYnxDvRxKEQTDtBC71yzaNUkmk_Zdp9zDxMFCl0s-MMKLmL-NuGwbO_6DGnkwU8fBrD_REDCsUeimNuYGuRXXCK6N1NSkZzmYBj2fy1NP8-68wqVPAlfe13uHN8Cc-BxRp8XohQi9aJRnHdO5bsyZmYkviMcYjIc1F7skB_goqZSGHy9Gp4o3JKrLOngP91mGJemxlLzQ0JsNMKzJdWCA1pGpWgYgdvMd0tc9aAvTcvTeUVIUD8u_w"
 
 
 const apiUrl = "https://api.spacetraders.io/v2"
@@ -66,7 +66,8 @@ const SpaceTradersDashboard = () => {
     action: string,
     urlBranch: string,
     reqMethod: string = "POST",
-    reqData?: {}
+    reqData?: {},
+    reqConfig?: {}
   ) => {
 
     const handleAxiosResponse = (
@@ -80,8 +81,9 @@ const SpaceTradersDashboard = () => {
     }
 
     const handleAxiosError = (error: any) => {
-      setResDataState((prevState) => ({ ...prevState, resError: error }))
-      console.error(error)
+      let outputError = error.response ? error.response.data : error.request ? error.request : error.message
+      setResDataState((prevState) => ({ ...prevState, resError: outputError }))
+     
     }
 
     const reqUrl = `${apiUrl}/${urlBranch}`
@@ -95,8 +97,9 @@ const SpaceTradersDashboard = () => {
         .then((res) => handleAxiosResponse(res, "viewAgentResData"))
         .catch(handleAxiosError)
     } else if (action === "accept_contract" && reqMethod === "POST") {
-      axios.post(reqUrl, reqData)
+      axios.post(reqUrl, reqData, { headers: { Authorization: `Bearer ${API_USER_TOKEN}` }})
         .then((res) => handleAxiosResponse(res, "acceptContractResData"))
+        .catch(handleAxiosError)
     }
   }
 
@@ -113,7 +116,7 @@ const SpaceTradersDashboard = () => {
         break
 
       case acceptContractButtonId:
-        sendApiRequest("accept_contract", `/my/contracts/${inputText}/accept`, "POST", { headers: { Authorization: `Bearer ${API_USER_TOKEN}` }})
+        sendApiRequest("accept_contract", `my/contracts/${inputText}/accept`, "POST")
         break
     }
     
